@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title>{product.name|Transcribe Demo} {product.version|}</title>
+	<style>
+		#transcribe, input, textarea, button { font-size: 11.5px; }
+		td { vertical-align: top; }
+		//table, td { border: 1px solid #CCCCCC; }
+		//input { display: inline-block;  }
+		div.right { text-align: right; display: inline-block; float: right; }
+		input[type="checkbox"] { vertical-align: sub; } //fix!
+		.note { font-size: 8.5px;}
+		.editor { width: 360px; height: 480px; overflow-y: scroll; }
+		.low-priority { color: #666699; text-shadow: 1px 1px #CCCCFF; }
+		input[type="button"], button, label, input[type="checkbox"] { cursor: pointer; }
+		.disabled, .disabled a, .disabled a:hover { color: #999999; }
+		a { text-decoration: none; color: #9999FF; }
+		a:hover { text-decoration: underline; color: #BBBBFF; }
+	</style>
+</head>
+<body>
+<table id="transcribe" width="1000px"><form name="transcribe">
+	<tr>
+		<td><input type="button" id="about" value="About" class="low-priority" /><input type="button" id="settings" value="Settings" class="low-priority" /><div class="right" id="player_select"><input type="button" id="open" value="Open Media and Transcript files" /></div></td>
+		<td><button type="button"s id="timestamp_button"><strong>[</strong><span style="color: #993333;" id="timestamp">00:00:00.00</span><strong>]</strong></button> <label for="timestamp_button" class="note">or press <span style="color: #993333; font-weight: bold;">[enter]</span></label>
+		<div class="right disabled" id="language_select">Language: <select name="language" disabled="true"><option style="font-style: italic;">Unspecified</option></select></div></td>
+	</tr>
+	<tr>
+		<td label="player" width="640px" height="480px">{player|With help of a player module you can play and pause video and audio files. But due to a misconfiguration in the Settings, there is no player module loaded or available. Unfortunatly.}</td>
+		<td label="editor" width="360px"><textarea name="editor" class="editor" wrap="soft" placeholder="{editor.placeholder|}">{editor.content|}</textarea></td>
+	</tr>
+	<tr>
+		<td><input type="button" id="player_action" value="play" onClick="this.value = (this.value == 'play' ? 'pause' : 'play')" /> <label for="player_action" class="note">or press <span style="color: #993333; font-weight: bold;">[tab]</span></label> <div class="right disabled"><input type="checkbox" name="dragon" id="dragon" value="auto" disabled="true"/><label for="dragon">Auto Transcribe with <strong><a href="http://www.nuance.com/dragon/">Dragon Naturally Speaking</a></strong></label></div></td>
+		<td><input type="checkbox" name="markdown" id="markdown" value="allow" disabled="true" /><label for="markdown" class="disabled">Allow <strong><a href="http://daringfireball.net/projects/markdown/">Markdown</a></strong></label> <div class="right"><input type="button" value="Save" style="font-weight: bold;" /></div></td>
+	</tr>
+</form></table>
+</body>
+</html>
