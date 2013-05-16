@@ -1,0 +1,45 @@
+<link href="{player.root|./modules/player/video-js/}video-js.css" rel="stylesheet">
+<script src="{player.root|./modules/player/video-js/}video.js"></script>
+<script>
+  videojs.options.flash.swf = "{player.root|./modules/player/video-js/}video-js.swf"
+</script>
+<video id="{player.id|player}" class="video-js vjs-default-skin"
+  controls preload="auto" width="{player.width|640}" height="{player.height|480}"
+  poster="{player.poster|http://video-js.zencoder.com/oceans-clip.png}"
+  data-setup='{"example_option":true}'>
+ <source id="player_mp4" src="{player.src|http://video-js.zencoder.com/oceans-clip.mp4}" type='{player.type|video/mp4}' />
+</video>
+<script>
+var myPlayer = videojs("{player.id|player}");
+myPlayer.src({ type: "{player.type|video/mp4}", src: "{player.src|http://video-js.zencoder.com/oceans-clip.mp4}" });
+function player_is_playing(){
+	return /*bool*/ !myPlayer.paused();
+}
+function player_is_paused(){ return !player_is_playing(); }
+function player_play(){ myPlayer.play(); }
+function player_pause(){ myPlayer.pause(); }
+function player_timestamp(raw=false){
+	if( raw != false){
+		return myPlayer.currentTime();
+	}
+	else{
+		var whereYouAt = myPlayer.currentTime();
+		var fullsec = Math.floor(whereYouAt);
+		var msec = whereYouAt - fullsec;
+		var hours = Math.floor((fullsec / (60*60) ));
+		var minutes = Math.floor(((fullsec - (hours*60)) / 60));
+		var seconds = (fullsec - ((minutes*60) + (hours*60*60)) );
+		return hours.toString() + ':' + minutes.toString() + ':' + seconds.toString() + msec.toString().substr(1,3);
+	}
+}
+function player_press_play_paused(){
+	var button = document.getElementById('player_action');
+	if(player_is_playing()){
+		player_pause();
+		button.value = 'play';
+	} else {
+		player_play();
+		button.value = 'pause';
+	}
+}
+</script>
