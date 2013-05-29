@@ -1,4 +1,11 @@
 <link href="{player.root|./modules/player/video-js/}video-js.css" rel="stylesheet">
+<style>
+.vjs-default-skin .vjs-big-play-button {
+	top: 50%;
+	left: 50%;
+	margin: -4em 0 0 -6em;
+}
+</style>
 <script src="{player.root|./modules/player/video-js/}video.js"></script>
 <script>
   videojs.options.flash.swf = "{player.root|./modules/player/video-js/}video-js.swf"
@@ -25,7 +32,7 @@ function player_timestamp(raw=false){
 	else{
 		var whereYouAt = myPlayer.currentTime();
 		var fullsec = Math.floor(whereYouAt);
-		var msec = whereYouAt - fullsec;
+		var msec = (whereYouAt - fullsec) + 0.0001 /*if 0: substring length fix*/;
 		var hours = Math.floor((fullsec / (60*60) ));
 		var minutes = Math.floor(((fullsec - (hours*60)) / 60));
 		var seconds = (fullsec - ((minutes*60) + (hours*60*60)) );
