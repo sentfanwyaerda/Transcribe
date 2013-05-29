@@ -5,13 +5,13 @@
 </script>
 <video id="{player.id|player}" class="video-js vjs-default-skin"
   controls preload="auto" width="{player.width|640}" height="{player.height|480}"
-  poster="{player.poster|http://video-js.zencoder.com/oceans-clip.png}"
+  poster="{player.poster|./media/virtual-assistant-services-300x225.jpg}"
   data-setup='{"example_option":true}'>
- <source id="player_mp4" src="{player.src|http://video-js.zencoder.com/oceans-clip.mp4}" type='{player.type|video/mp4}' />
+ <source id="player_source" src="{player.src|./media/oceans-clip.mp4}" type='{player.type|video/mp4}' />
 </video>
 <script>
 var myPlayer = videojs("{player.id|player}");
-myPlayer.src({ type: "{player.type|video/mp4}", src: "{player.src|http://video-js.zencoder.com/oceans-clip.mp4}" });
+//myPlayer.src("{player.src|./media/oceans-clip.mp4}");
 function player_is_playing(){
 	return /*bool*/ !myPlayer.paused();
 }
@@ -29,9 +29,23 @@ function player_timestamp(raw=false){
 		var hours = Math.floor((fullsec / (60*60) ));
 		var minutes = Math.floor(((fullsec - (hours*60)) / 60));
 		var seconds = (fullsec - ((minutes*60) + (hours*60*60)) );
-		return hours.toString() + ':' + minutes.toString() + ':' + seconds.toString() + msec.toString().substr(1,3);
+		return zero_fill(hours.toString()) + ':' + zero_fill(minutes.toString()) + ':' + zero_fill(seconds.toString()) + msec.toString().substr(1,3);
 	}
 }
+function zero_fill(str, length=2, fill='0'){
+	if(str.length < length){
+		for(var i = 0; i < (length - str.length) ; i++){
+			str = fill + str;
+		}
+		return str;
+	}
+	else{ return str; }
+}
+function timestampTracker(options){
+		set_timestamp(player_timestamp());
+}; 
+myPlayer.on("pause", timestampTracker);
+myPlayer.on("timeupdate", timestampTracker);
 function player_press_play_paused(){
 	var button = document.getElementById('player_action');
 	if(player_is_playing()){
@@ -41,5 +55,11 @@ function player_press_play_paused(){
 		player_play();
 		button.value = 'pause';
 	}
+}
+function player_load(source){
+	myPlayer.src(source);
+}
+function player_goto(seconds){
+	myPlayer.currentTime(seconds);
 }
 </script>

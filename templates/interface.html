@@ -6,31 +6,72 @@
 		td { vertical-align: top; }
 		//table, td { border: 1px solid #CCCCCC; }
 		//input { display: inline-block;  }
+		div {display: inline-block; }
 		div.right { text-align: right; display: inline-block; float: right; }
 		input[type="checkbox"] { vertical-align: sub; } //fix!
 		.note { font-size: 8.5px;}
-		.editor { width: 360px; height: 480px; overflow-y: scroll; }
+		.editor { width: 320px; height: 480px; overflow-y: scroll; }
 		.low-priority { color: #666699; text-shadow: 1px 1px #CCCCFF; }
 		input[type="button"], button, label, input[type="checkbox"] { cursor: pointer; }
 		.disabled, .disabled a, .disabled a:hover { color: #999999; }
 		a { text-decoration: none; color: #9999FF; }
 		a:hover { text-decoration: underline; color: #BBBBFF; }
 	</style>
+	<script>
+	function set_timestamp(value){
+		document.getElementById('timestamp').innerHTML = value;
+	}
+	function add_timestamp(){
+		var caret = getCaret(document.getElementById('editor'));
+		//if(caret == 0 && document.getElementById('editor').value.length != 0){ caret = document.getElementById('editor').value.length}
+		//alert('Timestamp: [' + player_timestamp() + '] ' + caret);
+		document.getElementById('editor').value = document.getElementById('editor').value.substr(0, caret) + "\n\n[" + player_timestamp() + "]\n" + document.getElementById('editor').value.substr(caret);
+	}
+	function moveCaretToEnd(el) { //origin: http://stackoverflow.com/questions/6003300/how-to-place-cursor-at-end-of-text-in-textarea-when-tabbed-into
+		if (typeof el.selectionStart == "number") {
+			el.selectionStart = el.selectionEnd = el.value.length;
+		} else if (typeof el.createTextRange != "undefined") {
+			el.focus();
+			var range = el.createTextRange();
+			range.collapse(false);
+			range.select();
+		}
+	}
+	function getCaret(node) { //origin: http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
+		if (node.selectionStart) {
+			return node.selectionStart;
+		} else if (!document.selection) {
+			return 0;
+		}
+
+		var c = "\001",
+			sel = document.selection.createRange(),
+			dul = sel.duplicate(),
+			len = 0;
+
+		dul.moveToElementText(node);
+		sel.text = c;
+		len = dul.text.indexOf(c);
+		sel.moveStart('character',-1);
+		sel.text = "";
+		return len;
+	}
+	</script>
 </head>
 <body>
-<table id="transcribe" width="1000px"><form name="transcribe">
+<table id="transcribe" width="960px"><form name="transcribe">
 	<tr>
 		<td><input type="button" id="about" value="About" class="low-priority" /><input type="button" id="settings" value="Settings" class="low-priority" /><div class="right" id="player_select"><input type="button" id="open" value="Open Media and Transcript files" /></div></td>
-		<td><button type="button"s id="timestamp_button" onClick="alert('[' + player_timestamp() + ']')"><strong>[</strong><span style="color: #993333;" id="timestamp">00:00:00.00</span><strong>]</strong></button> <label for="timestamp_button" class="note">or press <span style="color: #993333; font-weight: bold;">[enter]</span></label>
-		<div class="right disabled" id="language_select">Language: <select name="language" disabled="true"><option style="font-style: italic;">Unspecified</option></select></div></td>
+		<td><button type="button"s id="timestamp_button" onClick="add_timestamp();"><strong>[</strong><span style="color: #993333;" id="timestamp">00:00:00.00</span><strong>]</strong></button> <label for="timestamp_button" class="note">or press <span style="color: #993333; font-weight: bold;">[shift][enter]</span></label></td>
 	</tr>
 	<tr>
 		<td label="player" width="640px" height="480px">{player|With help of a player module you can play and pause video and audio files. But due to a misconfiguration in the Settings, there is no player module loaded or available. Unfortunatly.}</td>
-		<td label="editor" width="360px"><textarea name="editor" class="editor" wrap="soft" placeholder="{editor.placeholder|}">{editor.content|}</textarea></td>
+		<td label="editor" width="320px"><textarea name="editor" id="editor" class="editor" wrap="soft" placeholder="{editor.placeholder|}">{editor.content|}</textarea></td>
 	</tr>
 	<tr>
-		<td><input type="button" id="player_action" value="play" onClick="player_press_play_paused()" /> <label for="player_action" class="note">or press <span style="color: #993333; font-weight: bold;">[tab]</span></label> <div class="right disabled"><input type="checkbox" name="dragon" id="dragon" value="auto" disabled="true"/><label for="dragon">Auto Transcribe with <strong><a href="http://www.nuance.com/dragon/">Dragon Naturally Speaking</a></strong></label></div></td>
-		<td><input type="checkbox" name="markdown" id="markdown" value="allow" disabled="true" /><label for="markdown" class="disabled">Allow <strong><a href="http://daringfireball.net/projects/markdown/">Markdown</a></strong></label> <div class="right"><input type="button" value="Save" style="font-weight: bold;" /></div></td>
+		<td><input type="button" id="player_action" value="play" onClick="player_press_play_paused()" /> <label for="player_action" class="note">or press <span style="color: #993333; font-weight: bold;">[tab]</span></label> <div class="right disabled" style="display:none;s"><input type="checkbox" name="dragon" id="dragon" value="auto" disabled="true"/><label for="dragon">Auto Transcribe with <strong><a href="http://www.nuance.com/dragon/">Dragon Naturally Speaking</a></strong></label> <input type="checkbox" name="markdown" id="markdown" value="allow" disabled="true" /><label for="markdown" class="disabled">Allow <strong><a href="http://daringfireball.net/projects/markdown/">Markdown</a></strong></label></div></td>
+		<td>
+		<div class="disabled" id="language_select">Language: <select name="language" disabled="true"><option style="font-style: italic;">Unspecified</option></select></div> <div class="right"><input type="button" value="Save" style="font-weight: bold;" /></div></td>
 	</tr>
 </form></table>
 </body>
