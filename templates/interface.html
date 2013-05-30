@@ -21,11 +21,15 @@
 	function set_timestamp(value){
 		document.getElementById('timestamp').innerHTML = value;
 	}
-	function add_timestamp(){
+	function add_timestamp(postfix=false){
 		var caret = getCaret(document.getElementById('editor'));
 		//if(caret == 0 && document.getElementById('editor').value.length != 0){ caret = document.getElementById('editor').value.length}
 		//alert('Timestamp: [' + player_timestamp() + '] ' + caret);
-		document.getElementById('editor').value = document.getElementById('editor').value.substr(0, caret) + "\n\n[" + player_timestamp() + "]\n" + document.getElementById('editor').value.substr(caret);
+		var extra = "\n\n[" + player_timestamp() + "]" + (postfix == false ? "\n" : "");
+		document.getElementById('editor').value = document.getElementById('editor').value.substr(0, caret) + extra + document.getElementById('editor').value.substr(caret);
+		document.getElementById('editor').focus();
+		document.getElementById('editor').scrollTop = caret + extra.length;
+		document.getElementById('editor').setSelectionRange(caret + extra.length, caret + extra.length );
 	}
 	function moveCaretToEnd(el) { //origin: http://stackoverflow.com/questions/6003300/how-to-place-cursor-at-end-of-text-in-textarea-when-tabbed-into
 		if (typeof el.selectionStart == "number") {
@@ -56,9 +60,27 @@
 		sel.text = "";
 		return len;
 	}
+	function onEditorChange(current, event) { 
+		//alert('key: ' + event.keyCode);
+		if (event.keyCode == 13 && event.shiftKey /* && !event.ctrlKey && !event.altKey */) { //on shift+enter
+			add_timestamp(true); return false;
+		}
+		else{ if(event.keyCode == 9 /* && !event.shiftKey && !event.ctrlKey && !event.altKey */){ //on tab
+			var caret = getCaret(current);
+			player_press_play_paused();
+			//current.focus();
+			//current.scrollTop = caret;
+			//current.setSelectionRange(caret, caret);
+			event.preventDefault();
+			return false;
+		}
+		else {
+			return true;
+		}}
+	}
 	</script>
 </head>
-<body>
+<body onload="document.getElementById('editor').focus();">
 <table id="transcribe" width="960px"><form name="transcribe">
 	<tr>
 		<td><input type="button" id="about" value="About" class="low-priority" /><input type="button" id="settings" value="Settings" class="low-priority" /><div class="right" id="player_select"><input type="button" id="open" value="Open Media and Transcript files" /></div></td>
@@ -66,7 +88,7 @@
 	</tr>
 	<tr>
 		<td label="player" width="640px" height="480px">{player|With help of a player module you can play and pause video and audio files. But due to a misconfiguration in the Settings, there is no player module loaded or available. Unfortunatly.}</td>
-		<td label="editor" width="320px"><textarea name="editor" id="editor" class="editor" wrap="soft" placeholder="{editor.placeholder|}">{editor.content|}</textarea></td>
+		<td label="editor" width="320px"><textarea name="editor" id="editor" class="editor" wrap="soft" placeholder="{editor.placeholder|}" onKeyDown="onEditorChange(this, event)">{editor.content|}</textarea></td>
 	</tr>
 	<tr>
 		<td><input type="button" id="player_action" value="play" onClick="player_press_play_paused()" /> <label for="player_action" class="note">or press <span style="color: #993333; font-weight: bold;">[tab]</span></label> <div class="right disabled" style="display:none;s"><input type="checkbox" name="dragon" id="dragon" value="auto" disabled="true"/><label for="dragon">Auto Transcribe with <strong><a href="http://www.nuance.com/dragon/">Dragon Naturally Speaking</a></strong></label> <input type="checkbox" name="markdown" id="markdown" value="allow" disabled="true" /><label for="markdown" class="disabled">Allow <strong><a href="http://daringfireball.net/projects/markdown/">Markdown</a></strong></label></div></td>
