@@ -1,7 +1,7 @@
 <?php
 
 class Transcribe {
-	public function Version($f=FALSE){ return '0.1.2'; }
+	public function Version($f=FALSE){ return '0.1.3'; }
 	public function Product_url($u=FALSE){ return ($u === TRUE ? "https://github.com/sentfanwyaerda/Transcribe" : "http://sent.wyaerda.org/Transcribe/".'?version='.self::Version(TRUE).'&license='.str_replace(' ', '+', self::License()) );}
 	public function Product($full=FALSE){ return "Transcribe".($full ? " ".self::version(TRUE) : NULL); }
 	public function License($with_link=FALSE){ return ($with_link ? '<a href="'.self::License_url().'">' : NULL).'cc-by-nd 3.0'.($with_link ? '</a>' : NULL); }
