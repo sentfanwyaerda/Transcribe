@@ -16,6 +16,8 @@
 		.disabled, .disabled a, .disabled a:hover { color: #999999; }
 		a { text-decoration: none; color: #9999FF; }
 		a:hover { text-decoration: underline; color: #BBBBFF; }
+		#player { postition: relative; }
+		#browser, #about, #settings, #save { display: none; width: 640px; height: 480px; background-color: rgba(255,255,255,0.75); position: absolute; z-index: 5; }
 	</style>
 	<script>
 	function set_timestamp(value){
@@ -78,22 +80,47 @@
 			return true;
 		}}
 	}
+	function show_div(name, manual=5, closeothers=true){
+		if(typeof manual == 'boolean'){
+			if( manual == true ){
+				document.getElementById(name).style.display = 'block';
+			} else { //if( manual == false )
+				document.getElementById(name).style.display = 'none';
+			}
+		} else {
+			if( document.getElementById(name).style.display == 'none' ){
+				document.getElementById(name).style.display = 'block';
+			} else {
+				document.getElementById(name).style.display = 'none';
+			}
+		}
+		if(closeothers == true){
+			if(name != 'browser'){ show_browser(false, false); }
+			if(name != 'about'){ show_about(false, false); }
+			if(name != 'settings'){ show_settings(false, false); }
+			if(name != 'save'){ show_save(false, false); }
+		}
+	}
+	function show_browser(manual=5, closeothers=true){ show_div('browser', manual, closeothers); }
+	function show_about(manual=5, closeothers=true){ show_div('about', manual, closeothers); }
+	function show_settings(manual=5, closeothers=true){ show_div('settings', manual, closeothers); }
+	function show_save(manual=5, closeothers=true){ show_div('save', manual, closeothers); }
 	</script>
 </head>
 <body onload="document.getElementById('editor').focus();">
 <table id="transcribe" width="960px"><form name="transcribe">
 	<tr>
-		<td><input type="button" id="about" value="About" class="low-priority" /><input type="button" id="settings" value="Settings" class="low-priority" /><div class="right" id="player_select"><input type="button" id="open" value="Open Media and Transcript files" /></div></td>
+		<td><input type="button" id="about_button" value="About" class="low-priority" onClick="show_about();" /><input type="button" id="settings_button" value="Settings" class="low-priority" onClick="show_settings();" /><div class="right" id="player_select"><input type="button" id="open" value="Open Media and Transcript files" onClick="show_browser();" /></div></td>
 		<td><button type="button"s id="timestamp_button" onClick="add_timestamp();"><strong>[</strong><span style="color: #993333;" id="timestamp">00:00:00.00</span><strong>]</strong></button> <label for="timestamp_button" class="note">or press <span style="color: #993333; font-weight: bold;">[shift][enter]</span></label></td>
 	</tr>
 	<tr>
-		<td label="player" width="640px" height="480px">{player|With help of a player module you can play and pause video and audio files. But due to a misconfiguration in the Settings, there is no player module loaded or available. Unfortunatly.}</td>
+		<td label="player" width="640px" height="480px"><div id="about" style="display:none;">{about|Insert About text}</div><div id="settings" style="display:none;"s>{settings|All the settings!!}</div><div id="browser" style="display:none;">{browser|Transcribe is not yet able to <em>Open Media and Transcript file</em>s. Here comes the input form. [<a href="#" onClick="show_browser(false);">close</a>]}</div><div id="save" style="display:none;">{save|The SAVE method}</div>{player|With help of a player module you can play and pause video and audio files. But due to a misconfiguration in the Settings, there is no player module loaded or available. Unfortunatly.}</td>
 		<td label="editor" width="320px"><textarea name="editor" id="editor" class="editor" wrap="soft" placeholder="{editor.placeholder|}" onKeyDown="onEditorChange(this, event)">{editor.content|}</textarea></td>
 	</tr>
 	<tr>
 		<td><input type="button" id="player_action" value="play" onClick="player_press_play_paused()" /> <label for="player_action" class="note">or press <span style="color: #993333; font-weight: bold;">[tab]</span></label> <div class="right disabled" style="display:none;s"><input type="checkbox" name="dragon" id="dragon" value="auto" disabled="true"/><label for="dragon">Auto Transcribe with <strong><a href="http://www.nuance.com/dragon/">Dragon Naturally Speaking</a></strong></label> <input type="checkbox" name="markdown" id="markdown" value="allow" disabled="true" /><label for="markdown" class="disabled">Allow <strong><a href="http://daringfireball.net/projects/markdown/">Markdown</a></strong></label></div></td>
 		<td>
-		<div class="disabled" id="language_select">Language: <select name="language" disabled="true"><option style="font-style: italic;">Unspecified</option></select></div> <div class="right"><input type="button" disabled="true" value="Save" style="font-weight: bold;" /></div></td>
+		<div class="disabled" id="language_select">Language: <select name="language" disabled="true"><option style="font-style: italic;">Unspecified</option></select></div> <div class="right"><input type="button" value="Save" style="font-weight: bold;" onClick="show_save();" /></div></td>
 	</tr>
 </form></table>
 </body>
