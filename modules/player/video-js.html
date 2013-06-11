@@ -53,16 +53,20 @@ function timestampTracker(options){
 }; 
 myPlayer.on("pause", timestampTracker);
 myPlayer.on("timeupdate", timestampTracker);
-function player_press_play_paused(){
+function player_press_play_paused(action=false){
 	var button = document.getElementById('player_action');
+	if(action == true){
+		if(player_is_playing()){ player_pause(); } else { player_play(); }
+	}
 	if(player_is_playing()){
-		player_pause();
-		button.value = 'play';
-	} else {
-		player_play();
 		button.value = 'pause';
+	} else {
+		button.value = 'play';
 	}
 }
+myPlayer.on("play", player_press_play_paused);
+myPlayer.on("pause", player_press_play_paused);
+myPlayer.on("ended", player_press_play_paused);
 function player_load(source){
 	myPlayer.src(source);
 }
