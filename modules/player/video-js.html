@@ -10,10 +10,11 @@
 <script>
   videojs.options.flash.swf = "{player.root|./modules/player/video-js/}video-js.swf"
 </script>
+<script src="{player.youtube.root|./modules/player/videojs-facebook/}vjs.youtube.js"></script>
 <video id="{player.id|player}" class="video-js vjs-default-skin"
   controls preload="auto" width="{player.width|640}" height="{player.height|480}"
   poster="{player.poster|./media/virtual-assistant-services-300x225.jpg}"
-  data-setup='{"example_option":true}'>
+  data-setup='{"techOrder": ["youtube", "html5", "flash"], "example_option":true}'>
  <source id="player_source" src="{player.src|./media/oceans-clip.mp4}" type='{player.type|video/mp4}' />
 </video>
 <script>

@@ -1,7 +1,7 @@
 <?php
 
 class Transcribe {
-	public function Version($f=FALSE){ return '0.1.4'; }
+	public function Version($f=FALSE){ return '0.1.5'; }
 	public function Product_url($u=FALSE){ return ($u === TRUE ? "https://github.com/sentfanwyaerda/Transcribe" : "http://sent.wyaerda.org/Transcribe/".'?version='.self::Version(TRUE).'&license='.str_replace(' ', '+', self::License()) );}
 	public function Product($full=FALSE){ return "Transcribe".($full ? " ".self::version(TRUE) : NULL); }
 	public function License($with_link=FALSE){ return ($with_link ? '<a href="'.self::License_url().'">' : NULL).'cc-by-nd 3.0'.($with_link ? '</a>' : NULL); }
@@ -16,7 +16,8 @@ class Transcribe {
 			'product.version' => self::Version(),
 		);
 		$settingvars = array(
-			'player' => self::parse_template('modules/player/video-js.html')
+			'player' => self::parse_template('modules/player/video-js.html'),
+			'browser' => self::parse_template('modules/browser/FSbrowser.html')
 		);
 		return self::parse_template('templates/interface.html', array_merge($globalvars, $settingvars));
 	}

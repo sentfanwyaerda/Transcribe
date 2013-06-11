@@ -1,0 +1,14 @@
+<script>
+function browser_load(uri){
+	player_pause(); //else it will continue playing in the background! Still a bug: it keeps loading previous files.
+	//alert('loading: ' + uri);
+	player_load(uri);
+	show_browser(false);
+	player_play();
+}
+</script>
+<a href="#" onClick="browser_load('./media/oceans-clip.mp4');">media/oceans-clip.mp4</a>
+<h3>Load by URI:</h3>
+<input value="" id="browser_load_uri" /><input type="button" value="load" onClick="browser_load(document.getElementById('browser_load_uri').value);"/>
+<h3>Youtube:</h3>
+http://youtu.be/<input value="" id="browser_load_youtube" /><input type="button" value="load" onClick="browser_load('http://www.youtube.com/watch?v=' + document.getElementById('browser_load_youtube').value );"/>
